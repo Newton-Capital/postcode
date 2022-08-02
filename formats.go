@@ -24,6 +24,7 @@ var formats = map[string]struct{}{
 	"ANA NAN":       {},
 	"ANA":           {},
 	"ANN":           {},
+	"ANN NAA":       {},
 	"ANNN":          {},
 	"CC NNNN":       {},
 	"CC-NNNN":       {},
@@ -53,6 +54,32 @@ var formats = map[string]struct{}{
 	"NNNNNNNNNN":    {},
 	"NNNNAA":        {},
 	"NNNN AA":       {},
+}
+
+var countries = map[string][]string{
+	"United Kingdom": {
+		"AA NNNNN",
+		"AA-NNNN",
+		"AAA NNNN",
+		"AAA NNNN-NNNN",
+		"AAA",
+		"AAAA NAA",
+		"AAN NAA",
+		"AAN",
+		"AANA",
+		"AANN NAA",
+		"AANN NNN",
+		"AANN",
+		"AANNNN",
+		"AN",
+		"ANA",
+		"ANN",
+		"ANN NAA",
+		"ANNN",
+	},
+	"Canada": {
+		"ANA NAN",
+	},
 }
 
 // Source: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2

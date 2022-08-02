@@ -18,6 +18,7 @@ package postcode
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"unicode"
 )
@@ -33,7 +34,7 @@ var (
 // Validate checks if the provided input string matches any of the
 // accepted postcode formats. If the validation fails, the function returns
 // an error specifying the cause.
-func Validate(code string) error {
+func Validate(code string, country string) error {
 	if code = strings.ToUpper(strings.TrimSpace(code)); code == "" {
 		return ErrEmpty
 	}
@@ -56,8 +57,34 @@ func Validate(code string) error {
 		format[i] = r
 	}
 
+	foundPostalByCountry := ""
+
 	if _, ok := formats[string(format)]; ok {
-		return nil
+
+		// get postal codes format by country
+		v, ok := countries[country]
+		if ok {
+
+			// loop through the format results to see if any format match the code passed
+			// and assign the value to another variable "foundPostalByCountry"
+			for _, s := range v {
+				if strings.EqualFold(s, string(format)) {
+					foundPostalByCountry = s
+				}
+			}
+
+			// check if variable "foundPostalByCountry" is not empty
+			// and return nil,
+			// else return error invalid postal code for the country passed
+			if !strings.EqualFold(foundPostalByCountry, "") {
+				return nil
+			} else {
+				return fmt.Errorf("invalid postal code for %s", country)
+			}
+
+		} else {
+			return fmt.Errorf("unsupported country")
+		}
 	}
 
 	// Check if postal code is valid when accounting for the country code.

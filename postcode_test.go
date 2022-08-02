@@ -1,71 +1,44 @@
 package postcode
 
 import (
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestValidate(t *testing.T) {
 	testCases := []struct {
 		description string
+		country     string
 		input       string
 		expected    error
 	}{
 		{
 			description: "Paris, France",
-			input:       " 75008 ",
+			country:     "France",
+			input:       "75008",
+			expected:    fmt.Errorf("unsupported country"),
+		},
+		{
+			description: "United Kingdom, London",
+			country:     "United Kingdom",
+			input:       "B24 8DF",
 			expected:    nil,
 		},
 		{
-			description: "Brussels, Belgium",
-			input:       " 1000 ",
+			description: "Calgary, Canada",
+			country:     "Canada",
+			input:       "T2E 4Y5",
 			expected:    nil,
-		},
-		{
-			description: "Utrecht, The Netherlands",
-			input:       " 3511 ax ",
-			expected:    nil,
-		},
-		{
-			description: "Utrecht, The Netherlands, Alt",
-			input:       " 3511AX ",
-			expected:    nil,
-		},
-		{
-			description: "Hannover, Germany",
-			input:       " 30179 ",
-			expected:    nil,
-		},
-		{
-			description: "Vilnius, Lithuania",
-			input:       "LT-00200",
-			expected:    nil,
-		},
-		{
-			description: "Empty postal code",
-			input:       "",
-			expected:    ErrEmpty,
-		},
-		{
-			description: "Short postal code",
-			input:       "A",
-			expected:    ErrShort,
-		},
-		{
-			description: "Inexistent country code",
-			input:       "TY 1234",
-			expected:    ErrInvalidCountry,
-		},
-		{
-			description: "Inexistent postal code format",
-			input:       "11111111111",
-			expected:    ErrInvalidFormat,
 		},
 	}
 
 	for _, testCase := range testCases {
 		t.Logf("Validating `%s` (%s)", testCase.input, testCase.description)
-		if err := Validate(testCase.input); err != testCase.expected {
-			t.Errorf("expected: %v; got: %v", testCase.expected, err)
+		err := Validate(testCase.input, testCase.country)
+		if err != nil {
+			assert.Equal(t, testCase.expected.Error(), err.Error())
 		}
 	}
 }
